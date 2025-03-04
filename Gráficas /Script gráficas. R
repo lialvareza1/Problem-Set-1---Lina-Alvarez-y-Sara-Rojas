@@ -1,0 +1,38 @@
+# Universidad de Los Andes - Problem Set 1
+# Big Data y Machine Learning
+# Lina María Álvarez Ardila y Sara Rocío Rojas
+# 03/03/25
+
+# Cargar librerías necesarias
+library(pacman)
+p_load(ggplot2, tidyverse, readxl)
+
+# Cargar datos desde Excel
+data <- read_excel("C:/Users/yoyol/OneDrive/Escritorio/Universidad/Noveno semestre UNIANDES/Big Data and Machine Learning/Sesión 1/Taller 1/GEIH Datos.xlsx",
+                   na = c("NA", "Faltante", ""))
+
+# Filtrar mayores de 18 años y ocupados, transformar variables
+datos_18 <- data %>%
+  filter(age > 18, ocu == 1) %>%
+  mutate(y_salary_m = as.numeric(y_salary_m)) %>%
+  filter(!is.na(y_salary_m), y_salary_m > 0) %>%
+  mutate(maxeduclevel = as.numeric(as.character(maxeduclevel)))
+
+# 📊 Gráfica 1: Distribución del Salario
+ggplot(datos_18, aes(x = y_salary_m)) +
+  geom_histogram(fill = "blue", bins = 50, alpha = 0.7) +
+  labs(title = "Distribución del Salario", x = "Salario Mensual (COP)", y = "Frecuencia") +
+  theme_minimal()
+
+# 📊 Gráfica 2: Boxplot del Salario
+ggplot(datos_18, aes(y = y_salary_m)) +
+  geom_boxplot(fill = "red", alpha = 0.5) +
+  labs(title = "Boxplot del Salario", y = "Salario Mensual (COP)") +
+  theme_minimal()
+
+# 📊 Gráfica 3: Dispersión Salario vs Edad
+ggplot(datos_18, aes(x = age, y = y_salary_m)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "loess", color = "blue") +
+  labs(title = "Dispersión Salario vs. Edad", x = "Edad", y = "Salario Mensual") +
+  theme_minimal()
